@@ -1,0 +1,189 @@
+/// @author Gordon Bittner
+/// This program will create a queue of names, and let the user
+/// manipulate the queue through various functions.
+/// Removing, moving, and adding more names to the queue.
+#include <queue>
+
+using namespace std;
+
+/// function prototypes
+int menu();
+void enterNames(queue<string> &name);
+void moveName(queue<string> &name);
+void deleteName(queue<string> &name);
+void displayQueue(queue<string> &name);
+
+
+	
+	
+int main() {
+	/// creating the queue
+	queue<string> name;
+
+	int check = 0;
+	
+	/// loop for the menue
+	while(check != -999)
+	{
+		check = menu();
+		if(check == 1){
+			enterNames(name);
+		}
+		else if(check == 2){
+			moveName(name);
+		}
+		else if(check == 3)
+		{
+			deleteName(name);
+		}
+		else if(check == -999)
+		{
+			cout<<"Goodbye."<<endl;
+		}
+		else{
+			cout<<"Invalid value."<<endl;
+		}
+		
+		displayQueue(name);
+	}
+	
+}
+
+/// menu function
+int menu(){
+	int num;
+	cout<<"Type 1 to enter names into the queue."<<endl;
+	cout<<"Type 2 to move a name to the front of a queue."<<endl;
+	cout<<"Type 3 to delete a name from the queue."<<endl;
+	cout<<"Type -999 to exit the program."<<endl;
+	cin>>num;
+	return num;
+}
+
+/// function that allows the user to enter names into the queue
+void enterNames(queue<string> &name){
+	string ex;
+	while(ex != "exit"){
+		string entName;
+		cout<<"Type the name to enter into the queue."<<endl;
+		cin.clear();
+		cin.ignore(180, '\n');
+		getline(cin, entName);
+		name.push(entName);
+		
+		cout<<"Press any key to continue, or exit to quit."<<endl;
+		cin>>ex;
+	}
+}
+/// function to allow the user to select a name, then move it 
+/// to the front of the queue
+void moveName(queue<string> &name)
+{
+	queue<string> temp1;
+	queue<string> temp2;
+	string tempName;
+	
+	cout<<"Enter a name to move to the front."<<endl;
+	cin.clear();
+	cin.ignore(180, '\n');
+	getline(cin, tempName);
+	
+	/// loops until the queue is empty
+	while(!name.empty())
+	{
+		if(name.front() == tempName)
+		{
+			temp1.push(name.front());
+			name.pop();
+		}
+		else{
+			temp2.push(name.front());
+			name.pop();
+		}
+	}
+	
+	/// checks to see if the name existed
+	if(temp1.empty())
+	{
+		cout<<"Name does not exist"<<endl;
+		while(!temp2.empty())
+		{
+			name.push(temp2.front());
+			temp2.pop();
+		}
+		
+	}
+	/// if name was valid, moves it to the front of the queue
+	else{
+		name.push(temp1.front());
+		temp1.pop();
+		while(!temp2.empty())
+		{
+			name.push(temp2.front());
+			temp2.pop();
+		}
+	}
+}
+
+/// function to allow the user to delete a specific name if it exists
+void deleteName(queue<string> &name)
+{
+	string delName;
+	queue<string> temp1;
+	queue<string> temp2;
+	
+	cout<<"Enter a name to delete from the queue."<<endl;
+	cin.clear();
+	cin.ignore(180, '\n');
+	getline(cin, delName);
+	
+	/// continues until the queue is empty
+	while(!name.empty())
+	{
+		if(name.front() == delName)
+		{
+			temp1.push(name.front());
+			name.pop();
+		}
+		else{
+			temp2.push(name.front());
+			name.pop();
+		}
+		
+	}
+	/// checks for the specific name
+	if(temp1.empty())
+	{
+		cout<<"Name was not in queue."<<endl;
+		while(!temp2.empty())
+		{
+			name.push(temp2.front());
+			temp2.pop();
+		}
+	}
+	/// if name was valid, removes it from the queue
+	else {
+		cout<<"Name deleted from queue."<<endl;
+		while(!temp2.empty())
+		{
+			name.push(temp2.front());
+			temp2.pop();
+		}
+	}
+}
+/// additional function to display the queue data
+void displayQueue(queue<string> &name)
+{
+	queue<string> temp;
+	while(!name.empty())
+	{
+		cout<<"Name: "<<name.front()<<endl;
+		temp.push(name.front());
+		name.pop();
+	}
+	while(!temp.empty())
+	{
+		name.push(temp.front());
+		temp.pop();
+	}
+}
